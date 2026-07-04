@@ -24,6 +24,11 @@ class TarefaIn(BaseModel):
     titulo: str
 
 
+class TarefaUpdate(BaseModel):
+    titulo: str
+    concluida: bool
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -49,3 +54,12 @@ def obter(tarefa_id: int):
     if tarefa is None:
         raise HTTPException(status_code=404, detail="tarefa não encontrada")
     return tarefa
+
+
+@app.put("/tarefas/{tarefa_id}")
+def atualizar(tarefa_id: int, dados: TarefaUpdate):
+    if tarefa_id not in _tarefas:
+        raise HTTPException(status_code=404, detail="tarefa não encontrada")
+    atualizada = {"id": tarefa_id, "titulo": dados.titulo, "concluida": dados.concluida}
+    _tarefas[tarefa_id] = atualizada
+    return atualizada
