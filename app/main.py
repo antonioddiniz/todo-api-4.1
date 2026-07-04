@@ -36,3 +36,16 @@ def criar(tarefa: TarefaIn):
     _tarefas[_proximo_id] = nova
     _proximo_id += 1
     return nova
+
+
+@app.get("/tarefas")
+def listar():
+    return list(_tarefas.values())
+
+
+@app.get("/tarefas/{tarefa_id}")
+def obter(tarefa_id: int):
+    tarefa = _tarefas.get(tarefa_id)
+    if tarefa is None:
+        raise HTTPException(status_code=404, detail="tarefa não encontrada")
+    return tarefa
